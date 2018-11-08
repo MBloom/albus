@@ -1,0 +1,11 @@
+{
+	"name": "Prism",
+	"executables": [
+		{
+			"name": "Foo",
+			"description": "My prism description",
+			"bazel_command": "bazel build ..."
+		}
+
+	]
+}

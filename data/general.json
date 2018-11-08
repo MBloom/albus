@@ -1,0 +1,11 @@
+{
+	"name": "General",
+	"executables": [
+		{
+			"name": "Foo",
+			"description": "My test description",
+			"bazel_command": "bazel build ..."
+		}
+
+	]
+}
