@@ -17,7 +17,7 @@ setup(
     install_requires=dependencies,
     entry_points={
         'console_scripts': [
-            'albus = albus.main:main',
+            'albus = albus.cli:main',
         ],
     },
     classifiers=[
