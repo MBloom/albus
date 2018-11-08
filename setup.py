@@ -1,6 +1,9 @@
 from setuptools import setup
 
-dependencies = ['PyInquirer']
+dependencies = [
+    'PyInquirer',
+    'pika',
+]
 
 setup(
     name='albus',
