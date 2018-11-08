@@ -2,18 +2,32 @@
 	"name": "General",
 	"executables": [
 		{
-			"name": "Foo",
-			"description": "My test description",
-			"command": "bazel run //rabbitmq:check_rmq_size -- test"
+			"name": "Check LiveAPI update queue size",
+			"description": "Prints the number of messages in the live api updates queue",
+			"command": "bazel run //rabbitmq:check_rmq_size -- --host=rabbitmq.office.yext.com cms.liveapi.liveapiindexserver.es6_liveapiupdates"
 		},
 		{
 			"name": "RunEntitiesStorm",
 			"description": "Runs entitiesstorm",
+			"path": "alpha",
 			"executables": [
 				{
-					"name": "Bar",
-					"description": "Bar",
-					"command": "bazel run //rabbitmq:check_rmq_size -- test"
+					"name": "Run Haproxy",
+					"description": "Runs haproxy",
+					"path": "alpha",
+					"command": "edward start haproxy"
+				},
+				{
+					"name": "Run Storm",
+					"description": "Runs storm",
+					"path": "alpha",
+					"command": "edward start storm"
+				},
+				{
+					"name": "Run EntitiesStorm",
+					"description": "Runs entitiesstorm",
+					"path": "alpha",
+					"command": "edward start entitiesstorm"
 				}
 			]
 		}

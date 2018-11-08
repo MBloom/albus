@@ -1,8 +1,9 @@
 import subprocess
 import sys
 
-def execute(command):
-    process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+def execute(command, path='.'):
+    process = subprocess.Popen(command, shell=True, 
+        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=path)
 
     # Poll process for new output until finished
     while True:
