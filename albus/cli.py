@@ -9,10 +9,13 @@ import os
 from pprint import pprint
 from foo_checker.bazel_run import execute
 
+from fuzzywuzzy import process
 from PyInquirer import prompt
 
 data_dir = 'data'
 ALPHA = os.getenv('ALPHA')
+
+MANUAL_SEARCH = "Search manually"
 
 def init_data():
     data = {}
@@ -22,13 +25,16 @@ def init_data():
             data[payload['name']] = payload
     return data
 
-def prompt_topic(data):    
+def prompt_topic(data):
+    choices = sorted([obj for obj in data])
+    choices.insert(0, MANUAL_SEARCH)
+    #pprint([{'key': unicode(i), 'name': choices[i], 'value': choices[i]} for i in range(len(choices))])
     questions = [
         {
-            'type': 'rawlist',
+            'type': 'expand',
             'name': 'topic',
             'message': 'Please select from a topic below',
-            'choices': sorted([obj for obj in data]),
+            'choices': [{'key': unicode(i), 'name': choices[i], 'value': choices[i]} for i in range(len(choices))],
             'default': 0,
         },
     ]
@@ -58,10 +64,37 @@ def get_command_path(executable):
         return ALPHA
     return '.'
 
+# >>> choices = ["Atlanta Falcons", "New York Jets", "New York Giants", "Dallas Cowboys"]
+# >>> process.extract("new york jets", choices, limit=2)
+#    [('New York Jets', 100), ('New York Giants', 78)]
+# >>> process.extractOne("cowboys", choices)
+#    ("Dallas Cowboys", 90)
+def fuzzy_search(data):
+    questions = [
+        {
+            'type': 'input',
+            'name': 'executable_name',
+            'message': 'Search for an executable',
+        },
+    ]
+
+    answer = prompt(questions)
+    search_query = answer['executable_name']
+    executables = []
+    for topic in data:
+        executables += data[topic]['executables']
+    executables_dict = {executable['name']:executable for executable in executables}
+    executable_name_match = process.extract(search_query, executables_dict.keys(), limit=1)
+    return executables_dict[executable_name_match[0][0]]
+
 def main():
     all_data = init_data()
     topic = prompt_topic(all_data)
-    executable = prompt_executable(all_data[topic])
+    if topic == MANUAL_SEARCH:
+        executable = fuzzy_search(all_data)
+        print("Best match: {0}".format(executable['name']))
+    else:
+        executable = prompt_executable(all_data[topic])
     if 'command' in executable:
         execute(executable['command'], get_command_path(executable))
     elif 'executables' in executable:

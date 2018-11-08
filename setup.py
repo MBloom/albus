@@ -1,7 +1,9 @@
 from setuptools import setup
 
 dependencies = [
+    'fuzzywuzzy',
     'PyInquirer',
+    'python-Levenshtein',
     'pika',
 ]
 
