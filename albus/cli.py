@@ -1,24 +1,27 @@
 from __future__ import print_function, unicode_literals
 
+import sys
+sys.path.append('..')
+
 import glob
 import json
 import os
 from pprint import pprint
+from foo_checker.bazel_run import execute
 
 from PyInquirer import prompt
 
 data_dir = 'data'
-data = {}
 
 def init_data():
-    global data
+    data = {}
     for filename in glob.glob(os.path.join(data_dir, '*.json')):
         with open(filename, mode='r') as f:
             payload = json.load(f)
             data[payload['name']] = payload
+    return data
 
-def prompt_topic():
-    init_data()
+def prompt_topic(data):    
     questions = [
         {
             'type': 'rawlist',
@@ -32,8 +35,7 @@ def prompt_topic():
     answer = prompt(questions)
     return answer['topic']
 
-def prompt_executable(topic_name):
-    topic = data[topic_name]
+def prompt_executable(topic):
     executables = topic['executables']
     executable_name_to_executable = {executable['name']:executable for executable in executables}
 
@@ -51,6 +53,12 @@ def prompt_executable(topic_name):
     return executable_name_to_executable[answer['executable_name']]
 
 def main():
-    topic_name = prompt_topic()
-    executable = prompt_executable(topic_name)
-    pprint(executable)
+    all_data = init_data()
+    topic = prompt_topic(all_data)
+    executable = prompt_executable(all_data[topic])
+    if 'command' in executable:
+        execute(executable['command'])
+    elif 'executables' in executable:
+        inner_executable = prompt_executable(executable)
+        if 'command' in inner_executable:
+            execute(inner_executable['command'])

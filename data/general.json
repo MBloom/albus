@@ -4,8 +4,18 @@
 		{
 			"name": "Foo",
 			"description": "My test description",
-			"bazel_command": "bazel build ..."
+			"command": "bazel run //rabbitmq:check_rmq_size -- test"
+		},
+		{
+			"name": "RunEntitiesStorm",
+			"description": "Runs entitiesstorm",
+			"executables": [
+				{
+					"name": "Bar",
+					"description": "Bar",
+					"command": "bazel run //rabbitmq:check_rmq_size -- test"
+				}
+			]
 		}
-
 	]
 }
