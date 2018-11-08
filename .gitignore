@@ -2,6 +2,13 @@
 .DS_Store
 .idea/*
 
+# Bazel generated files
+bazel-albus
+bazel-bin
+bazel-genfiles
+bazel-out
+bazel-testlogs
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
