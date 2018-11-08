@@ -8,6 +8,7 @@ bazel-bin
 bazel-genfiles
 bazel-out
 bazel-testlogs
+bazel-rabbitmq
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
